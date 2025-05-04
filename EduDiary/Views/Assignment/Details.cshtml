@@ -1,0 +1,89 @@
+﻿@model Assignment
+@{
+    ViewData["Title"] = Model.Title;
+    var isTeacher = ViewBag.IsTeacher;
+    var submission = ViewBag.Submission as AssignmentSubmission;
+}
+
+<h2>@Model.Title</h2>
+<p>@Model.Description</p>
+<p><strong>Due:</strong> @Model.DueDate.ToString("g")</p>
+
+@if (isTeacher)
+{
+    <div class="mb-3">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit Assignment</a>
+    </div>
+
+    <h3>Submissions</h3>
+    @if (Model.Submissions.Any())
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Student</th>
+                    <th>Submitted</th>
+                    <th>Grade</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var sub in Model.Submissions)
+                {
+                    <tr>
+                        <td>@sub.Student.FullName</td>
+                        <td>@sub.SubmissionDate.ToString("g")</td>
+                        <td>@(sub.Grade?.ToString() ?? "Not graded")</td>
+                        <td>
+                            <a asp-action="GradeSubmission" asp-route-id="@sub.Id" class="btn btn-primary btn-sm">Grade</a>
+                            @if (!string.IsNullOrEmpty(sub.FilePath))
+                            {
+                                <a href="@sub.FilePath" download class="btn btn-info btn-sm">Download</a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No submissions yet.</p>
+    }
+}
+else
+{
+    <h3>Your Submission</h3>
+    @if (submission != null)
+    {
+        <div class="card">
+            <div class="card-body">
+                <p><strong>Submitted:</strong> @submission.SubmissionDate.ToString("g")</p>
+                @if (!string.IsNullOrEmpty(submission.FilePath))
+                {
+                    <p><strong>File:</strong> <a href="@submission.FilePath" download>Download</a></p>
+                }
+                @if (!string.IsNullOrEmpty(submission.Text))
+                {
+                    <p><strong>Text:</strong> @submission.Text</p>
+                }
+                @if (submission.Grade.HasValue)
+                {
+                    <p><strong>Grade:</strong> @submission.Grade</p>
+                }
+                @if (!string.IsNullOrEmpty(submission.Feedback))
+                {
+                    <p><strong>Feedback:</strong> @submission.Feedback</p>
+                }
+                <a asp-action="EditSubmission" asp-route-id="@submission.Id" class="btn btn-warning">Edit Submission</a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <p>You haven't submitted anything yet.</p>
+        <a asp-action="Submit" asp-route-id="@Model.Id" class="btn btn-primary">Submit Assignment</a>
+    }
+}
+
+<a asp-action="Details" asp-controller="Course" asp-route-id="@Model.CourseId" class="btn btn-secondary">Back to Course</a>

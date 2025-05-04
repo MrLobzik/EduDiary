@@ -1,0 +1,41 @@
+﻿@model Test
+@{
+    ViewData["Title"] = "Test Attempts";
+}
+
+<h2>Test Attempts - @Model.Title</h2>
+
+@if (Model.Attempts.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Student</th>
+                <th>Started</th>
+                <th>Submitted</th>
+                <th>Score</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var attempt in Model.Attempts)
+            {
+                <tr>
+                    <td>@attempt.Student.FullName</td>
+                    <td>@attempt.StartTime.ToString("g")</td>
+                    <td>@(attempt.EndTime?.ToString("g") ?? "In progress")</td>
+                    <td>@(attempt.Score?.ToString() ?? "Pending") / @Model.Questions.Sum(q => q.Points)</td>
+                    <td>
+                        <a asp-action="TestResults" asp-route-attemptId="@attempt.Id" class="btn btn-sm btn-info">View</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No attempts yet.</p>
+}
+
+<a asp-action="Details" asp-controller="Course" asp-route-id="@Model.CourseId" class="btn btn-secondary">Back to Course</a>

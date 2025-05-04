@@ -1,0 +1,90 @@
+﻿@model TestAttempt
+@{
+    ViewData["Title"] = "Test Results";
+    var isTeacher = User.IsInRole("Teacher");
+}
+
+<h2>Test Results - @Model.Test.Title</h2>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <h5 class="card-title">@Model.Student.FullName</h5>
+        <p class="card-text">
+            <strong>Started:</strong> @Model.StartTime.ToString("g")<br />
+            <strong>Submitted:</strong> @Model.EndTime?.ToString("g")<br />
+            <strong>Score:</strong> @(Model.Score?.ToString() ?? "Pending") / @Model.Test.Questions.Sum(q => q.Points)
+        </p>
+    </div>
+</div>
+
+@foreach (var answer in Model.Answers.OrderBy(a => a.Question.Id))
+{
+    <div class="card mb-3">
+        <div class="card-header">
+            <h5>@answer.Question.Text</h5>
+            <p>Points: @(answer.PointsAwarded?.ToString() ?? "0") / @answer.Question.Points</p>
+        </div>
+        <div class="card-body">
+            @if (answer.Question.Type == QuestionType.TextAnswer)
+            {
+                <p><strong>Your answer:</strong> @answer.AnswerText</p>
+                @if (isTeacher && !answer.PointsAwarded.HasValue)
+                {
+                    <form asp-action="GradeTextAnswer" method="post">
+                        <input type="hidden" name="answerId" value="@answer.Id" />
+                        <div class="form-group">
+                            <label>Points (max @answer.Question.Points)</label>
+                            <input type="number" name="pointsAwarded" class="form-control"
+                                   min="0" max="@answer.Question.Points" />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Grade</button>
+                    </form>
+                }
+            }
+            else
+            {
+                <p><strong>Correct answer(s):</strong></p>
+                <ul>
+                    @foreach (var option in answer.Question.AnswerOptions.Where(o => o.IsCorrect))
+                    {
+                        <li>@option.Text</li>
+                    }
+                </ul>
+
+                <p><strong>Your answer(s):</strong></p>
+                @if (answer.SelectedOptions.Any())
+                {
+                    <ul>
+                        @foreach (var selected in answer.SelectedOptions)
+                        {
+                            <li class="@(selected.AnswerOption.IsCorrect ? "text-success" : "text-danger")">
+                                @selected.AnswerOption.Text
+                                @if (selected.AnswerOption.IsCorrect)
+                                {
+                                    <span>(Correct)</span>
+                                }
+                                else
+                                {
+                                    <span>(Incorrect)</span>
+                                }
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p>No answer selected</p>
+                }
+            }
+        </div>
+    </div>
+}
+
+@if (isTeacher)
+{
+    <a asp-action="ViewAttempts" asp-route-testId="@Model.TestId" class="btn btn-secondary">Back to Attempts</a>
+}
+else
+{
+    <a asp-action="Details" asp-controller="Course" asp-route-id="@Model.Test.CourseId" class="btn btn-secondary">Back to Course</a>
+}

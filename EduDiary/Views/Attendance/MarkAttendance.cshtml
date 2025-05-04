@@ -1,0 +1,44 @@
+﻿@model List<AttendanceViewModel>
+@{
+    ViewData["Title"] = "Mark Attendance";
+    var courseId = ViewBag.CourseId;
+    var courseTitle = ViewBag.CourseTitle;
+    var date = ViewBag.Date;
+}
+
+<h2>Mark Attendance for @courseTitle</h2>
+<h4>@date.ToShortDateString()</h4>
+
+<form asp-action="MarkAttendance" method="post">
+    <input type="hidden" name="courseId" value="@courseId" />
+    <input type="hidden" name="date" value="@date.ToString("yyyy-MM-dd")" />
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Student</th>
+                <th>Present</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                <tr>
+                    <td>
+                        @Model[i].StudentName
+                        <input type="hidden" asp-for="@Model[i].StudentId" />
+                        <input type="hidden" asp-for="@Model[i].StudentName" />
+                    </td>
+                    <td>
+                        <input type="checkbox" asp-for="@Model[i].IsPresent" />
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="form-group mt-3">
+        <input type="submit" value="Save Attendance" class="btn btn-primary" />
+        <a asp-action="Details" asp-controller="Course" asp-route-id="@courseId" class="btn btn-secondary">Cancel</a>
+    </div>
+</form>

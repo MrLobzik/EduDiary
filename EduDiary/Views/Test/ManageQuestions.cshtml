@@ -1,0 +1,46 @@
+﻿@model Test
+@{
+    ViewData["Title"] = "Manage Questions";
+}
+
+<h2>@Model.Title - Questions</h2>
+
+<div class="mb-3">
+    <a asp-action="CreateQuestion" asp-route-testId="@Model.Id" asp-route-type="@QuestionType.SingleChoice" class="btn btn-primary">Add Single Choice</a>
+    <a asp-action="CreateQuestion" asp-route-testId="@Model.Id" asp-route-type="@QuestionType.MultipleChoice" class="btn btn-primary">Add Multiple Choice</a>
+    <a asp-action="CreateQuestion" asp-route-testId="@Model.Id" asp-route-type="@QuestionType.TextAnswer" class="btn btn-primary">Add Text Answer</a>
+</div>
+
+@if (Model.Questions.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Question</th>
+                <th>Type</th>
+                <th>Points</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var question in Model.Questions)
+            {
+                <tr>
+                    <td>@question.Text</td>
+                    <td>@question.Type</td>
+                    <td>@question.Points</td>
+                    <td>
+                        <a asp-action="EditQuestion" asp-route-id="@question.Id" class="btn btn-sm btn-warning">Edit</a>
+                        <a asp-action="DeleteQuestion" asp-route-id="@question.Id" class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No questions yet.</p>
+}
+
+<a asp-action="Details" asp-controller="Course" asp-route-id="@Model.CourseId" class="btn btn-secondary">Back to Course</a>

@@ -1,0 +1,94 @@
+﻿@model TestAttempt
+@{
+    ViewData["Title"] = "Take Test";
+    var timeRemaining = ViewBag.TimeRemaining;
+}
+
+<h2>@Model.Test.Title</h2>
+<p>@Model.Test.Description</p>
+
+@if (timeRemaining != null)
+{
+    <div class="alert alert-info">
+        Time remaining: <span id="timeRemaining">@timeRemaining.ToString("F0")</span> minutes
+    </div>
+}
+
+<form asp-action="SubmitTest" id="testForm">
+    <input type="hidden" asp-for="Id" />
+
+    @foreach (var question in Model.Test.Questions.OrderBy(q => q.Id))
+    {
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5>@question.Text</h5>
+                <p>Points: @question.Points</p>
+            </div>
+            <div class="card-body">
+                @if (question.Type == QuestionType.SingleChoice)
+                {
+                    foreach (var option in question.AnswerOptions)
+                    {
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="answers[@question.Id]"
+                                   id="option_@option.Id" value="@option.Id" />
+                            <label class="form-check-label" for="option_@option.Id">
+                                @option.Text
+                            </label>
+                        </div>
+                    }
+                }
+                else if (question.Type == QuestionType.MultipleChoice)
+                {
+                    foreach (var option in question.AnswerOptions)
+                    {
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox"
+                                   name="selectedOptions[@question.Id]" value="@option.Id"
+                                   id="option_@option.Id" />
+                            <label class="form-check-label" for="option_@option.Id">
+                                @option.Text
+                            </label>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <textarea name="answers[@question.Id]" class="form-control" rows="3"></textarea>
+                }
+            </div>
+        </div>
+    }
+
+    <button type="submit" class="btn btn-primary">Submit Test</button>
+</form>
+
+@if (timeRemaining != null)
+{
+    @section Scripts {
+    <script>
+        $(document).ready(function() {
+            const endTime = new Date();
+            endTime.setMinutes(endTime.getMinutes() + @timeRemaining);
+
+            function updateTimer() {
+                const now = new Date();
+                const diff = endTime - now;
+
+                if (diff <= 0) {
+                    $('#timeRemaining').text('0');
+                    $('#testForm').submit();
+                    return;
+                }
+
+                const minutes = Math.floor(diff / (1000 * 60));
+                $('#timeRemaining').text(minutes);
+
+                setTimeout(updateTimer, 60000); // Update every minute
+            }
+
+            updateTimer();
+        });
+    </script>
+    }
+}

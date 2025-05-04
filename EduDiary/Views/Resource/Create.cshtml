@@ -1,0 +1,59 @@
+﻿@model Resource
+@{
+    ViewData["Title"] = "Add Resource";
+    var sectionId = ViewBag.SectionId;
+}
+
+<h2>Add Resource</h2>
+
+<form asp-action="Create" enctype="multipart/form-data">
+    <input type="hidden" asp-for="SectionId" value="@sectionId" />
+    <div class="form-group">
+        <label asp-for="Title" class="control-label"></label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Type" class="control-label"></label>
+        <select asp-for="Type" class="form-control" id="resourceType">
+            <option value="@ResourceType.Link">Link</option>
+            <option value="@ResourceType.File">File</option>
+            <option value="@ResourceType.Text">Text</option>
+        </select>
+    </div>
+
+    <div class="form-group" id="urlGroup">
+        <label asp-for="Url" class="control-label"></label>
+        <input asp-for="Url" class="form-control" />
+        <span asp-validation-for="Url" class="text-danger"></span>
+    </div>
+
+    <div class="form-group" id="fileGroup" style="display:none;">
+        <label class="control-label">File</label>
+        <input type="file" name="file" class="form-control" />
+    </div>
+
+    <div class="form-group" id="contentGroup" style="display:none;">
+        <label asp-for="Content" class="control-label"></label>
+        <textarea asp-for="Content" class="form-control" rows="5"></textarea>
+        <span asp-validation-for="Content" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mt-3">
+        <input type="submit" value="Create" class="btn btn-primary" />
+        <a asp-action="Details" asp-controller="Course" asp-route-id="@Model.Section.CourseId" class="btn btn-secondary">Cancel</a>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('#resourceType').change(function() {
+                const type = $(this).val();
+                $('#urlGroup').toggle(type === '@ResourceType.Link');
+                $('#fileGroup').toggle(type === '@ResourceType.File');
+                $('#contentGroup').toggle(type === '@ResourceType.Text');
+            }).trigger('change');
+        });
+    </script>
+}

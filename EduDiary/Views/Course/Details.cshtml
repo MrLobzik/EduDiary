@@ -1,0 +1,178 @@
+﻿@model Course
+@{
+    ViewData["Title"] = Model.Title;
+    var isTeacher = ViewBag.IsTeacher;
+}
+
+<h2>@Model.Title</h2>
+<p>@Model.Description</p>
+
+@if (isTeacher)
+{
+    <div class="mb-3">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit Course</a>
+        <a asp-action="ManageStudents" asp-route-id="@Model.Id" class="btn btn-secondary">Manage Students</a>
+        <a asp-action="MarkAttendance" asp-controller="Attendance" asp-route-courseId="@Model.Id" class="btn btn-primary">Mark Attendance</a>
+    </div>
+}
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h4>Sections</h4>
+                @if (isTeacher)
+                {
+                    <a asp-action="Create" asp-controller="Section" asp-route-courseId="@Model.Id" class="btn btn-sm btn-success">Add Section</a>
+                }
+            </div>
+            <div class="card-body">
+                @if (Model.Sections.Any())
+                {
+                    <ul class="list-group">
+                        @foreach (var section in Model.Sections)
+                        {
+                            <li class="list-group-item">
+                                <h5>@(section.Title)</h5>
+                                <p>@(section.Content)</p>
+                                @if (section.Resources.Any())
+                                {
+                                    <div class="mt-2">
+                                        <h6>Resources:</h6>
+                                        <ul>
+                                            @foreach (var resource in section.Resources)
+                                            {
+                                                <li>
+                                                    @if (resource.Type == ResourceType.Link)
+                                                    {
+                                                        <a href="@resource.Url" target="_blank">@resource.Title</a>
+                                                    }
+                                                    else if (resource.Type == ResourceType.File)
+                                                    {
+                                                        <a href="@resource.Url" download>@resource.Title</a>
+                                                    }
+                                                    else
+                                                    {
+                                                        @resource.Title
+                                                    }
+                                                    @if (isTeacher)
+                                                    {
+                                                        <a asp-action="Delete" asp-controller="Resource" asp-route-id="@resource.Id" class="btn btn-sm btn-danger">Delete</a>
+                                                    }
+                                                </li>
+                                            }
+                                        </ul>
+                                    </div>
+                                }
+                                @if (isTeacher)
+                                {
+                                    <div class="mt-2">
+                                        <a asp-action="Edit" asp-controller="Section" asp-route-id="@(section.Id)" class="btn btn-sm btn-warning">Edit</a>
+                                        <a asp-action="Delete" asp-controller="Section" asp-route-id="@(section.Id)" class="btn btn-sm btn-danger">Delete</a>
+                                        <a asp-action="Create" asp-controller="Resource" asp-route-sectionId="@(section.Id)" class="btn btn-sm btn-success">Add Resource</a>
+                                    </div>
+                                }
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p>No sections yet.</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h4>Assignments</h4>
+                @if (isTeacher)
+                {
+                    <a asp-action="Create" asp-controller="Assignment" asp-route-courseId="@Model.Id" class="btn btn-sm btn-success">Add Assignment</a>
+                }
+            </div>
+            <div class="card-body">
+                @if (Model.Assignments.Any())
+                {
+                    <ul class="list-group">
+                        @foreach (var assignment in Model.Assignments)
+                        {
+                            <li class="list-group-item">
+                                <h5>@assignment.Title</h5>
+                                <p>@assignment.Description</p>
+                                <p>Due: @assignment.DueDate.ToString("g")</p>
+                                <a asp-action="Details" asp-controller="Assignment" asp-route-id="@assignment.Id" class="btn btn-sm btn-info">View</a>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p>No assignments yet.</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h4>Tests</h4>
+                @if (isTeacher)
+                {
+                    <a asp-action="Create" asp-controller="Test" asp-route-courseId="@Model.Id" class="btn btn-sm btn-success">Add Test</a>
+                }
+            </div>
+            <div class="card-body">
+                @if (Model.Tests.Any())
+                {
+                    <ul class="list-group">
+                        @foreach (var test in Model.Tests)
+                        {
+                            <li class="list-group-item">
+                                <h5>@test.Title</h5>
+                                <p>@test.Description</p>
+                                <p>Available: @test.AvailableFrom.ToString("g") - @test.AvailableTo.ToString("g")</p>
+                                <a asp-action="Details" asp-controller="Test" asp-route-id="@test.Id" class="btn btn-sm btn-info">View</a>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p>No tests yet.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (isTeacher)
+{
+    <div class="mt-4">
+        <h4>Students</h4>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var student in ViewBag.Students)
+                {
+                    <tr>
+                        <td>@student.FullName</td>
+                        <td>@student.Email</td>
+                        <td>
+                            <a asp-action="ViewAttendance" asp-controller="Attendance" asp-route-courseId="@Model.Id" asp-route-studentId="@student.Id" class="btn btn-sm btn-info">View Attendance</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

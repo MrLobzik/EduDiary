@@ -1,0 +1,67 @@
+﻿@model IEnumerable<User>
+@{
+    ViewData["Title"] = "Manage Students";
+    var courseId = ViewBag.CourseId;
+    var studentsNotInCourse = ViewBag.StudentsNotInCourse as IEnumerable<User>;
+}
+
+<h2>Manage Students</h2>
+
+<h4>Current Students</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var student in Model)
+        {
+            <tr>
+                <td>@student.FullName</td>
+                <td>@student.Email</td>
+                <td>
+                    <form asp-action="RemoveStudent" method="post">
+                        <input type="hidden" name="courseId" value="@courseId" />
+                        <input type="hidden" name="studentId" value="@student.Id" />
+                        <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (studentsNotInCourse.Any())
+{
+    <h4>Add New Student</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var student in studentsNotInCourse)
+            {
+                <tr>
+                    <td>@student.FullName</td>
+                    <td>@student.Email</td>
+                    <td>
+                        <form asp-action="AddStudent" method="post">
+                            <input type="hidden" name="courseId" value="@courseId" />
+                            <input type="hidden" name="studentId" value="@student.Id" />
+                            <button type="submit" class="btn btn-success btn-sm">Add</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<a asp-action="Details" asp-route-id="@courseId" class="btn btn-primary">Back to Course</a>
