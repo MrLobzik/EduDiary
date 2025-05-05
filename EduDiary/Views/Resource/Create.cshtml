@@ -1,4 +1,4 @@
-﻿@model Resource
+﻿@model EduDiary.Models.Resource
 @{
     ViewData["Title"] = "Add Resource";
     var sectionId = ViewBag.SectionId;
@@ -16,9 +16,9 @@
     <div class="form-group">
         <label asp-for="Type" class="control-label"></label>
         <select asp-for="Type" class="form-control" id="resourceType">
-            <option value="@ResourceType.Link">Link</option>
-            <option value="@ResourceType.File">File</option>
-            <option value="@ResourceType.Text">Text</option>
+            <option value="@EduDiary.Models.ResourceType.Link">Link</option>
+            <option value="@EduDiary.Models.ResourceType.File">File</option>
+            <option value="@EduDiary.Models.ResourceType.Text">Text</option>
         </select>
     </div>
 
@@ -50,9 +50,9 @@
         $(document).ready(function() {
             $('#resourceType').change(function() {
                 const type = $(this).val();
-                $('#urlGroup').toggle(type === '@ResourceType.Link');
-                $('#fileGroup').toggle(type === '@ResourceType.File');
-                $('#contentGroup').toggle(type === '@ResourceType.Text');
+                $('#urlGroup').toggle(type === '@EduDiary.Models.ResourceType.Link');
+                $('#fileGroup').toggle(type === '@EduDiary.Models.ResourceType.File');
+                $('#contentGroup').toggle(type === '@EduDiary.Models.ResourceType.Text');
             }).trigger('change');
         });
     </script>

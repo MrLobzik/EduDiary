@@ -1,4 +1,4 @@
-﻿@model Course
+﻿@model EduDiary.Models.Course
 @{
     ViewData["Title"] = Model.Title;
     var isTeacher = ViewBag.IsTeacher;
@@ -43,11 +43,11 @@
                                             @foreach (var resource in section.Resources)
                                             {
                                                 <li>
-                                                    @if (resource.Type == ResourceType.Link)
+                                                    @if (resource.Type == EduDiary.Models.ResourceType.Link)
                                                     {
                                                         <a href="@resource.Url" target="_blank">@resource.Title</a>
                                                     }
-                                                    else if (resource.Type == ResourceType.File)
+                                                    else if (resource.Type == EduDiary.Models.ResourceType.File)
                                                     {
                                                         <a href="@resource.Url" download>@resource.Title</a>
                                                     }

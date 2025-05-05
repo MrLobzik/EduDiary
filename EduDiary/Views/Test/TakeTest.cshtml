@@ -1,4 +1,4 @@
-﻿@model TestAttempt
+﻿@model EduDiary.Models.TestAttempt
 @{
     ViewData["Title"] = "Take Test";
     var timeRemaining = ViewBag.TimeRemaining;
@@ -25,7 +25,7 @@
                 <p>Points: @question.Points</p>
             </div>
             <div class="card-body">
-                @if (question.Type == QuestionType.SingleChoice)
+                @if (question.Type == EduDiary.Models.QuestionType.SingleChoice)
                 {
                     foreach (var option in question.AnswerOptions)
                     {
@@ -38,7 +38,7 @@
                         </div>
                     }
                 }
-                else if (question.Type == QuestionType.MultipleChoice)
+                else if (question.Type == EduDiary.Models.QuestionType.MultipleChoice)
                 {
                     foreach (var option in question.AnswerOptions)
                     {

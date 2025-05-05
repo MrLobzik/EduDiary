@@ -5,15 +5,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Добавление сервисов в контейнер
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
+builder.Services.AddDbContext<EduDiary.Data.ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = false)
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddDefaultIdentity<EduDiary.Models.User>(options => options.SignIn.RequireConfirmedAccount = false)
+    .AddEntityFrameworkStores<EduDiary.Data.ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddDefaultIdentity<User>(options =>
+builder.Services.AddDefaultIdentity<EduDiary.Models.User>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
     options.Password.RequireDigit = true;
@@ -22,7 +22,7 @@ builder.Services.AddDefaultIdentity<User>(options =>
     options.Password.RequireUppercase = true;
     options.Password.RequiredLength = 6;
 })
-.AddEntityFrameworkStores<ApplicationDbContext>();
+.AddEntityFrameworkStores<EduDiary.Data.ApplicationDbContext>();
 
 builder.Services.Configure<FormOptions>(options =>
 {

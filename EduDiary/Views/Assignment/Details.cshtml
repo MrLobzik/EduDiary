@@ -1,8 +1,8 @@
-﻿@model Assignment
+﻿@model EduDiary.Models.Assignment
 @{
     ViewData["Title"] = Model.Title;
     var isTeacher = ViewBag.IsTeacher;
-    var submission = ViewBag.Submission as AssignmentSubmission;
+    var submission = ViewBag.Submission as EduDiary.Models.AssignmentSubmission;
 }
 
 <h2>@Model.Title</h2>

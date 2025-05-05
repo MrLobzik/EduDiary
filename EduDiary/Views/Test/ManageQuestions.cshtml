@@ -1,4 +1,4 @@
-﻿@model Test
+﻿@model EduDiary.Models.Test
 @{
     ViewData["Title"] = "Manage Questions";
 }
@@ -6,9 +6,9 @@
 <h2>@Model.Title - Questions</h2>
 
 <div class="mb-3">
-    <a asp-action="CreateQuestion" asp-route-testId="@Model.Id" asp-route-type="@QuestionType.SingleChoice" class="btn btn-primary">Add Single Choice</a>
-    <a asp-action="CreateQuestion" asp-route-testId="@Model.Id" asp-route-type="@QuestionType.MultipleChoice" class="btn btn-primary">Add Multiple Choice</a>
-    <a asp-action="CreateQuestion" asp-route-testId="@Model.Id" asp-route-type="@QuestionType.TextAnswer" class="btn btn-primary">Add Text Answer</a>
+    <a asp-action="CreateQuestion" asp-route-testId="@Model.Id" asp-route-type="@EduDiary.Models.QuestionType.SingleChoice" class="btn btn-primary">Add Single Choice</a>
+    <a asp-action="CreateQuestion" asp-route-testId="@Model.Id" asp-route-type="@EduDiary.Models.QuestionType.MultipleChoice" class="btn btn-primary">Add Multiple Choice</a>
+    <a asp-action="CreateQuestion" asp-route-testId="@Model.Id" asp-route-type="@EduDiary.Models.QuestionType.TextAnswer" class="btn btn-primary">Add Text Answer</a>
 </div>
 
 @if (Model.Questions.Any())

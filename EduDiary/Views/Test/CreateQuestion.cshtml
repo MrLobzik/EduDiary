@@ -1,4 +1,4 @@
-﻿@model Question
+﻿@model EduDiary.Models.Question
 @{
     ViewData["Title"] = "Add Question";
     var testId = ViewBag.TestId;
@@ -23,7 +23,7 @@
         <span asp-validation-for="Points" class="text-danger"></span>
     </div>
 
-    @if (questionType != QuestionType.TextAnswer)
+    @if (questionType != EduDiary.Models.QuestionType.TextAnswer)
     {
         <div class="form-group">
             <label class="control-label">Answer Options</label>

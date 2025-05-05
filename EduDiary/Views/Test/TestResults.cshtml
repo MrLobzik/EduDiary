@@ -1,4 +1,4 @@
-﻿@model TestAttempt
+﻿@model EduDiary.Models.TestAttempt
 @{
     ViewData["Title"] = "Test Results";
     var isTeacher = User.IsInRole("Teacher");
@@ -25,7 +25,7 @@
             <p>Points: @(answer.PointsAwarded?.ToString() ?? "0") / @answer.Question.Points</p>
         </div>
         <div class="card-body">
-            @if (answer.Question.Type == QuestionType.TextAnswer)
+            @if (answer.Question.Type == EduDiary.Models.QuestionType.TextAnswer)
             {
                 <p><strong>Your answer:</strong> @answer.AnswerText</p>
                 @if (isTeacher && !answer.PointsAwarded.HasValue)

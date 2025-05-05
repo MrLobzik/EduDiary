@@ -1,8 +1,8 @@
-﻿@model IEnumerable<User>
+﻿@model IEnumerable<EduDiary.Models.User>
 @{
     ViewData["Title"] = "Manage Students";
     var courseId = ViewBag.CourseId;
-    var studentsNotInCourse = ViewBag.StudentsNotInCourse as IEnumerable<User>;
+    var studentsNotInCourse = ViewBag.StudentsNotInCourse as IEnumerable<EduDiary.Models.User>;
 }
 
 <h2>Manage Students</h2>

@@ -1,4 +1,4 @@
-﻿@model Resource
+﻿@model EduDiary.Models.Resource
 @{
     ViewData["Title"] = "Delete Resource";
 }
@@ -13,12 +13,12 @@
         <dt class="col-sm-2">Type</dt>
         <dd class="col-sm-10">@Model.Type</dd>
 
-        @if (Model.Type == ResourceType.Link)
+        @if (Model.Type == EduDiary.Models.ResourceType.Link)
         {
             <dt class="col-sm-2">URL</dt>
             <dd class="col-sm-10"><a href="@Model.Url" target="_blank">@Model.Url</a></dd>
         }
-        else if (Model.Type == ResourceType.File)
+        else if (Model.Type == EduDiary.Models.ResourceType.File)
         {
             <dt class="col-sm-2">File</dt>
             <dd class="col-sm-10"><a href="@Model.Url" download>Download</a></dd>
